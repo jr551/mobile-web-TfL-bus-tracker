@@ -127,9 +127,7 @@ function showPosition(position)
 
     var mymap = L.map('mapid').setView([position.coords.latitude, position.coords.longitude], 17);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 18,
-        tileSize: 512,
-        zoomOffset: -1
+
     }).addTo(mymap);
 
     var circle = L.circle([position.coords.latitude, position.coords.longitude], {
