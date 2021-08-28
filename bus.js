@@ -126,14 +126,8 @@ function showPosition(position)
 {
 
     var mymap = L.map('mapid').setView([position.coords.latitude, position.coords.longitude], 17);
-    
-    
-    //Please get your own api key from mapbox dont use mine all up!
-    //Please get your own api key from mapbox dont use mine all up!
-    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoiam9obmJsdWV3b2xmZ2FtZXMiLCJhIjoiY2tzZ2VscTRxMWd2NTJ3bzRhYW40ZHY0eCJ9.RsknaU9ElEOkesW1g0YqGw', {
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 18,
-        
-        id: 'mapbox/streets-v11',
         tileSize: 512,
         zoomOffset: -1
     }).addTo(mymap);
