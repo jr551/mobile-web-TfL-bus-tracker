@@ -1,6 +1,7 @@
 var selectedNaptan = "";
 var selectedName = "";
 var firstPageLoad = true;
+var outsideOfLondon = false;
 
 var myIconnew = L.icon(
 {
@@ -41,16 +42,24 @@ $(function ()
 
 function changeBackgroundStatusA()
 {
+    if (outsideOfLondon)
+        return;
+
     document.body.style.background = "#e6ffe6";
 }
 
 function changeBackgroundStatusB()
 {
+    if (outsideOfLondon)
+        return;
+
     document.body.style.background = "#ffddcc";
 }
 
 function refreshBusses()
 {
+    if (outsideOfLondon)
+	return;
     changeBackgroundStatusA();
     var j;
     for (j = 0; j < 21; j++)
@@ -76,7 +85,13 @@ function refreshBusses()
         {
             return (a["timeToStation"] > b["timeToStation"]) ? 1 : ((a["timeToStation"] < b["timeToStation"]) ? -1 : 0);
         });
+	if (busses_due < 1)
+	{
+		document.getElementById("bus_0_title").style.visibility = 'visible';
+		document.getElementById("bus_0_title").innerHTML = 'No busses found for query.';
+document.body.style.background = "#ffddcc";
 
+	}
         var i;
         for (i = 0; i < busses_due; i++)
         {
@@ -119,7 +134,11 @@ function getLocation()
     }
     else
     {
+               document.getElementById("bus_summary").innerHTML = "Error: You need to allow location permission!";
+                document.body.style.background = "#ff0000";
+                outsideOfLondon = true;
     }
+
 }
 
 function showPosition(position)
@@ -127,7 +146,6 @@ function showPosition(position)
 
     var mymap = L.map('mapid').setView([position.coords.latitude, position.coords.longitude], 17);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-
     }).addTo(mymap);
 
     var circle = L.circle([position.coords.latitude, position.coords.longitude], {
@@ -140,8 +158,9 @@ function showPosition(position)
     {
 
         var i;
-        for (i = 0; i < 45; i++)
+        for (i = 0; i < data.length; i++)
         {
+
             var marker = L.marker([data[i]["lat"], data[i]["lon"]], {
                 icon: myIcon
             }).addTo(mymap);
@@ -167,8 +186,17 @@ function showPosition(position)
             }
             marker.on('click', onMapClick);
         }
+	if (data.length < 1)
+	{
+		        document.getElementById("bus_summary").innerHTML = "Sorry, This app can only be used inside of London.";
+                document.getElementById("bus_0_title").style.visibility = 'visible';
+                document.getElementById("bus_0_title").innerHTML = 'No busses found for query.';
+                document.body.style.background = "#ff0000";
+                outsideOfLondon = true;
 
-        if (firstPageLoad)
+	}
+
+        if (firstPageLoad && !outsideOfLondon)
         {
             selectedNaptan = mapMarkers[0].naptan;
             selectedName = mapMarkers[0].bname;
